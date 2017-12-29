@@ -21,6 +21,11 @@
 
 "use strict";
 
+
+var remap = function(input, min, max, newmin, newmax) {
+  return newmin + (input-min) * (newmax - newmin) / (max - min)
+}
+
 var CJammer = function () 
 {
   var signal_processor = new Signal_Processor();
@@ -214,6 +219,7 @@ var CJammer = function ()
     signal_processor.knobs.bit_step   = 16 - (14 * (mInstr[9]/255.0));
     signal_processor.knobs.pan        = mInstr[24]  / 255.0;
     signal_processor.knobs.delay      = mInstr[27]  / 255.0;
+    signal_processor.knobs.shape      = remap(mInstr[31], 0, 255, -0.99, 0.99);
 
     // Limit the delay to the delay buffer size.
     if (dly >= MAX_DELAY) {

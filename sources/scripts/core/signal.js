@@ -1,6 +1,6 @@
 function Signal_Processor()
 {
-  this.knobs = {distortion:null,pinking:null,compressor:null,drive:null,bit_phaser:null,bit_step:null,pan:null};
+  this.knobs = {distortion:null,pinking:null,compressor:null,drive:null,bit_phaser:null,bit_step:null,pan:null,shape:null};
 
   this.step_last = 0;
   this.phase = 0;
@@ -16,6 +16,7 @@ function Signal_Processor()
     output = this.effect_pinking(output,this.knobs.pinking);
     output = this.effect_compressor(output,this.knobs.compressor);
     output = this.effect_drive(output,this.knobs.drive);
+    output = this.effect_shape(output,this.knobs.shape);
 
     this.average = ((this.average * ((this.knobs.compressor) * 1000)) + output)/(((this.knobs.compressor) * 1000)+1);
 
@@ -80,6 +81,12 @@ function Signal_Processor()
     output = output < 1 ? output > -1 ? new Oscillator().sin(output*.25) : -1 : 1;
     output /= val;
     return output;
+  }
+
+  this.effect_shape = function(input,val)
+  {
+    var k = 2.0 * val / (1.0 - val);
+    return (1.0 + k) * input / (1.0 + k * Math.abs(input));
   }
 
   this.effect_drive = function(input,val)

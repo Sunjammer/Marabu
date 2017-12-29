@@ -43,6 +43,7 @@ function Instrument()
         pinking    : new UI_Slider({name: "PIN", min: 0,  max: 255 }),
         compressor : new UI_Slider({name: "CMP", min: 0,  max: 255 }),
         drive      : new UI_Slider({name: "DRV", min: 0,  max: 255 }),
+        shape      : new UI_Slider({name: "SHP", min: 0,  max: 255, center:true }),
         pan        : new UI_Slider({name: "PAN", min: 0,  max: 255, center:true })
       },
       uv : {
@@ -121,14 +122,16 @@ function Instrument()
       case 'delay_amount'     : return 26
   
       case 'effect_noise'       : return 13
-      case 'effect_bit'     : return 9
-      case 'effect_distortion'     : return 22
+      case 'effect_bit'         : return 9
+      case 'effect_distortion'  : return 22
       case 'effect_pinking'     : return 28
-      case 'effect_compressor'     : return 14
-      case 'effect_drive'     : return 23
-      case 'effect_pan'     : return 24
+      case 'effect_compressor'  : return 14
+      case 'effect_drive'       : return 23
+      case 'effect_pan'         : return 24
+      
+      case 'effect_shape'       : return 31
 
-      case 'uv_monitor'     : return null
+      case 'uv_monitor'         : return null
     }
 
     console.log("Unknown",id);
