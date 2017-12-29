@@ -300,10 +300,11 @@ function Marabu()
     // Arrows
 
     if(e.shiftKey){ // Instrument
+      var scale = e.ctrlKey?10:1; //If ctrl+shift, increment by 10
       if(key == "ArrowDown") { marabu.move_control(1); e.preventDefault(); return; }
       if(key == "ArrowUp")   { marabu.move_control(-1); e.preventDefault();return; }
-      if(key == "ArrowRight"){ marabu.move_control_value(1,true); e.preventDefault(); return; }
-      if(key == "ArrowLeft") { marabu.move_control_value(-1,true); e.preventDefault();return; }
+      if(key == "ArrowRight"){ marabu.move_control_value(1 * scale,true); e.preventDefault(); return; }
+      if(key == "ArrowLeft") { marabu.move_control_value(-1 * scale,true); e.preventDefault();return; }
     }
     else if(e.altKey || e.metaKey){
       if(key == "ArrowDown") { marabu.move_track(1); e.preventDefault(); return; }
