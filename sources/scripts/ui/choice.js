@@ -7,9 +7,9 @@ function UI_Choice(data)
 
   this.control = 0;
 
-  this.el = document.createElement("div");
-  this.name_el = document.createElement("t");
-  this.value_el = document.createElement("t");
+  this.el = null
+  this.name_el = null
+  this.value_el = null
 
   this.index = 0;
 
@@ -17,6 +17,10 @@ function UI_Choice(data)
 
   this.install = function(parent)
   {
+    this.el = document.createElement("div");
+    this.name_el = document.createElement("t");
+    this.value_el = document.createElement("t");
+    
     this.el.style.padding = "0px 2.5px";
     // Name Span
     this.name_el.className = "name";

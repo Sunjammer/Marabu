@@ -14,13 +14,18 @@ function UI_Slider(data)
 
   this.value = this.min;
 
-  this.el = document.createElement("div");
-  this.name_el = document.createElement("t");
-  this.value_el = document.createElement("t");
-  this.slide_el = document.createElement("div");
+  this.el = null
+  this.name_el = null
+  this.value_el = null
+  this.slide_el = null
 
   this.install = function(parent)
   {
+    this.el = document.createElement("div");
+    this.name_el = document.createElement("t");
+    this.value_el = document.createElement("t");
+    this.slide_el = document.createElement("div");
+
     this.el.className = "slider";
 
     // Name Span

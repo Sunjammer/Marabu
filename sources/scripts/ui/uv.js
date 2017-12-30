@@ -1,16 +1,16 @@
 function UI_Uv()
 {
-  this.el = document.createElement("div");
+  this.el = null
 
-  this.vol_el = document.createElement("div");
-  this.vol_name_el = document.createElement("t");
-  this.vol_canvas = document.createElement("canvas");
-  this.env_el = document.createElement("div");
-  this.env_name_el = document.createElement("t");
-  this.env_canvas = document.createElement("canvas");
-  this.wav_el = document.createElement("div");
-  this.wav_name_el = document.createElement("t");
-  this.wav_canvas = document.createElement("canvas");
+  this.vol_el = null
+  this.vol_name_el = null
+  this.vol_canvas = null
+  this.env_el = null
+  this.env_name_el = null
+  this.env_canvas = null
+  this.wav_el = null
+  this.wav_name_el = null
+  this.wav_canvas = null
 
   this.size = {width:45,height:15};
 
@@ -19,6 +19,19 @@ function UI_Uv()
 
   this.install = function(parent)
   {
+
+    this.el = document.createElement("div");
+
+    this.vol_el = document.createElement("div");
+    this.vol_name_el = document.createElement("t");
+    this.vol_canvas = document.createElement("canvas");
+    this.env_el = document.createElement("div");
+    this.env_name_el = document.createElement("t");
+    this.env_canvas = document.createElement("canvas");
+    this.wav_el = document.createElement("div");
+    this.wav_name_el = document.createElement("t");
+    this.wav_canvas = document.createElement("canvas");
+
     this.el.appendChild(this.env_el);
     this.el.appendChild(this.vol_el);
     this.el.appendChild(this.wav_el);

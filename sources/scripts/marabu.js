@@ -20,7 +20,7 @@ function Marabu()
   this.song = new Song();
   this.sequencer = new Sequencer();
   this.editor = new Editor(8,4);
-  this.instrument = new Instrument();
+  this.instrumentUI = new InstrumentUI();
   this.cheatcode = new Cheatcode();
   this.loop = new Loop();
 
@@ -28,19 +28,19 @@ function Marabu()
   {
     this.wrapper_el.innerHTML += "<div id='sequencer'><table class='tracks' id='sequencer-table'></table></div><yu id='scrollbar'></yu><yu id='position'></yu>";
     this.wrapper_el.innerHTML += this.editor.build();
-    this.wrapper_el.innerHTML += this.instrument.build();
+    this.wrapper_el.innerHTML += this.instrumentUI.build();
 
     this.song.init();
     this.theme.start();
 
     this.sequencer.start();
     this.editor.start();
-    this.instrument.start();  
+    this.instrumentUI.start();  
 
     this.song.update();
     this.sequencer.update();
     this.editor.update();
-    this.instrument.update();
+    this.instrumentUI.update();
   }
 
   this.update = function()
@@ -54,7 +54,7 @@ function Marabu()
     this.song.update();
     this.sequencer.update();
     this.editor.update();
-    this.instrument.update();
+    this.instrumentUI.update();
   }
 
   // Controls
@@ -97,6 +97,14 @@ function Marabu()
     this.update();
   }
 
+  this.move_effect = function(mod){
+    //Is the selection an effect?
+    if(this.selection.control>=17 && this.selection.control<24){ //TODO: Better grouping plz
+      console.dir(this.instrumentUI);
+      console.log("Move " + this.selection.control + " : " + mod)
+    }
+  }
+
   this.move_bpm = function(mod)
   {
     this.song.song().bpm = this.song.get_bpm() + mod;
@@ -106,15 +114,15 @@ function Marabu()
 
   this.move_control_value = function(mod,relative)
   {
-    var control = this.instrument.control_target(this.selection.control);
+    var control = this.instrumentUI.control_target(this.selection.control);
     control.mod(mod,relative);
     control.save();
   }
 
   this.add_control_value = function()
   {
-    var control = this.instrument.control_target(this.selection.control);
-    var control_storage = this.instrument.get_storage(control.family+"_"+control.id);
+    var control = this.instrumentUI.control_target(this.selection.control);
+    var control_storage = this.instrumentUI.get_storage(control.family+"_"+control.id);
     var control_value = control.value;
 
     this.song.inject_effect_at(this.selection.instrument,this.selection.track,this.selection.row,control_storage+1,control_value);
@@ -123,8 +131,8 @@ function Marabu()
 
   this.remove_control_value = function()
   {
-    var control = this.instrument.control_target(this.selection.control);
-    var control_storage = this.instrument.get_storage(control.family+"_"+control.id);
+    var control = this.instrumentUI.control_target(this.selection.control);
+    var control_storage = this.instrumentUI.get_storage(control.family+"_"+control.id);
     var control_value = control.value;
 
     this.song.erase_effect_at(this.selection.instrument,this.selection.track,this.selection.row);
@@ -173,7 +181,7 @@ function Marabu()
   {
     console.log("Stop!");
     this.song.stop_song();
-    this.instrument.controls.uv.monitor.clear();
+    this.instrumentUI.controls.uv.monitor.clear();
     this.is_playing = false;
     this.selection.row = 0;  
   }
@@ -301,8 +309,24 @@ function Marabu()
 
     if(e.shiftKey){ // Instrument
       var scale = e.ctrlKey?10:1; //If ctrl+shift, increment by 10
-      if(key == "ArrowDown") { marabu.move_control(1); e.preventDefault(); return; }
-      if(key == "ArrowUp")   { marabu.move_control(-1); e.preventDefault();return; }
+      if(key == "ArrowDown") { 
+        if(e.altKey){
+          marabu.move_effect(1);
+        }else{
+          marabu.move_control(1); 
+        }
+        e.preventDefault(); 
+        return; 
+      }
+      if(key == "ArrowUp")   {
+        if(e.altKey){
+          marabu.move_effect(-1);
+        }else{
+          marabu.move_control(-1);
+        }
+        e.preventDefault(); 
+        return; 
+      }
       if(key == "ArrowRight"){ marabu.move_control_value(1 * scale,true); e.preventDefault(); return; }
       if(key == "ArrowLeft") { marabu.move_control_value(-1 * scale,true); e.preventDefault();return; }
     }
