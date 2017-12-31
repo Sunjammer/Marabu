@@ -16,7 +16,7 @@ function Track()
   song.endPattern = 2;
   song.patternLen = 32;
 
-  // All 8 instruments
+  // All instruments
   song.songData = [];
   for (i = 0; i < MAX_INSTRUMENTS; i++){
     instr = {};
@@ -52,8 +52,8 @@ function Track()
       190,
       0,
       0,
-      127 //shaper default
-      ]; 
+      127 //shaper
+    ]; 
 
     // Sequence
     instr.p = [];

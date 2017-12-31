@@ -341,6 +341,7 @@ var CJammer = function ()
     for (var i = 0; i < instr.length; ++i) {
       mInstr.push(instr[i]);
     }
+    // Why??
   };
 
   this.updateRowLen = function (rowLen)

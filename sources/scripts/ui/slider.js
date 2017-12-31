@@ -3,11 +3,11 @@ function UI_Slider(data)
   var app = marabu;
   var self = this;
 
-  this.family = null;
   this.id = data.id;
   this.name = data.name;
   this.min = data.min;
   this.max = data.max;
+  this.path = null
   
   this.control = 0;
   this.center = data.center;
@@ -19,8 +19,9 @@ function UI_Slider(data)
   this.value_el = null
   this.slide_el = null
 
-  this.install = function(parent)
+  this.install = function(parent, path)
   {
+    this.path = path;
     this.el = document.createElement("div");
     this.name_el = document.createElement("t");
     this.value_el = document.createElement("t");

@@ -3,9 +3,10 @@ function Control(id, control){
   this.control = control
   this.control.id = id
   this.control.control = 0
-  this.install = function(parent){
-    this.control.family = "Fam"
-    this.control.install(parent)
+  this.install = function(parent, path){
+    var fc = path==""?"":path+"."+this.id
+    console.log(fc)
+    this.control.install(parent, fc)
   }
   this.get = function(path){
     if(path.constructor===Array)
@@ -20,10 +21,14 @@ function Group(id, items){
   this.id = id
   this.items = items
   this.isGroup = true
-  this.install = function(parent){
+  this.install = function(parent, path){
+    var thisElement = document.createElement("div");
+    thisElement.className = "family";
+    parent.appendChild(thisElement);
     for(var i=0; i<this.items.length; i++){
       var itm = this.items[i];
-      itm.install(parent);
+      var fc = path==""?this.id:path+"."+this.id
+      itm.install(thisElement, fc);
     }
   }
   this.get = function(path){
@@ -55,8 +60,11 @@ function Group(id, items){
   }
 }
 
-function Instrument()
+var INSTRUMENT_NUM_CONTROLS = 24;
+
+function InstrumentProxy(data)
 {
+  this.data = data
   this.controls = new Group("controls", [
     new Group("envelope", [
       new Control("type",       new UI_Choice({name: "ENV", choices: ["NONE","WEAK","AVRG","HARD"] })),
@@ -101,49 +109,47 @@ function Instrument()
   ]);
 
   this.getAllControls = function(){
-    return this.controls.flatten()
+    return this.controls.flatten().map(function(c) { return c.control })
   }
 
-  this.get_storage = function(id)
+  this.get_storage = function(path)
   {
-    // Env
-    switch (id){
-      case 'envelope_type'    : return 3
-      case 'envelope_attack'  : return 10
-      case 'envelope_sustain' : return 11
-      case 'envelope_release' : return 12
-      case 'envelope_curve'   : return 18
+    switch (path){
+      case 'envelope.type'    : return 3
+      case 'envelope.attack'  : return 10
+      case 'envelope.sustain' : return 11
+      case 'envelope.release' : return 12
+      case 'envelope.curve'   : return 18
     
-      case 'osc_shape'        : return 0
-      case 'osc_frequency'    : return 2
-      case 'osc_mix'          : return 1
-      case 'osc_detune'       : return 7
+      case 'osc.shape'        : return 0
+      case 'osc.frequency'    : return 2
+      case 'osc.mix'          : return 1
+      case 'osc.detune'       : return 7
     
-      case 'lfo_shape'        : return 15
-      case 'lfo_frequency'    : return 17
-      case 'lfo_amount'       : return 16
+      case 'lfo.shape'        : return 15
+      case 'lfo.frequency'    : return 17
+      case 'lfo.amount'       : return 16
     
-      case 'filter_shape'     : return 19
-      case 'filter_frequency' : return 20
-      case 'filter_resonance' : return 21
+      case 'effects.filter.shape'     : return 19
+      case 'effects.filter.frequency' : return 20
+      case 'effects.filter.resonance' : return 21
     
-      case 'delay_rate'       : return 27
-      case 'delay_amount'     : return 26
+      case 'effects.delay.rate'       : return 27
+      case 'effects.delay.amount'     : return 26
   
-      case 'effect_noise'       : return 13
-      case 'effect_bit'         : return 9
-      case 'effect_distortion'  : return 22
-      case 'effect_pinking'     : return 28
-      case 'effect_compressor'  : return 14
-      case 'effect_drive'       : return 23
-      case 'effect_pan'         : return 24
+      case 'effects.noise'       : return 13
+      case 'effects.bit'         : return 9
+      case 'effects.distortion'  : return 22
+      case 'effects.pinking'     : return 28
+      case 'effects.compressor'  : return 14
+      case 'effects.drive'       : return 23
+      case 'effects.shape'       : return 31
       
-      case 'effect_shape'       : return 31
-
-      case 'uv_monitor'         : return null
+      case 'master.pan'         : return 24
+      case 'uv.monitor'         : return null
     }
 
-    console.log("Unknown",id);
+    console.log("Unknown path: "+path);
     return -1;
   }
 }

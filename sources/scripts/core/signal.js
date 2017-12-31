@@ -9,12 +9,12 @@ function Signal_Processor()
   this.average = 0;
 
   this.defaultEffectChain = [
-    {op: this.effect_bitcrusher, priority:0 },
-    {op: this.effect_distortion, priority:0 },
-    {op: this.effect_pinking, priority:0 },
-    {op: this.effect_compressor, priority:0 },
-    {op: this.effect_drive, priority:0 },
-    {op: this.effect_shape, priority:0 }
+    this.effect_bitcrusher,
+    this.effect_distortion,
+    this.effect_pinking,
+    this.effect_compressor,
+    this.effect_drive,
+    this.effect_shape
   ]
 
   this.effectChain = this.defaultEffectChain.concat();
@@ -24,7 +24,7 @@ function Signal_Processor()
     var output = input;
 
     for(var i=0; i<this.effectChain.length;i++){
-      output = this.effectChain[i].op(output);
+      output = this.effectChain[i](output);
     }
 
 
@@ -139,13 +139,4 @@ function Signal_Processor()
     if(index == 17){ return [6,0]; } // PULSE
     if(index == 18){ return [6,2]; } // REVSAW
   }
-
-  this.sortEffects = function(){
-    this.effectChain = this.defaultEffectChain.sort(function(a,b){
-      if(a.priority==b.priority) return 0;
-      return a.priority>b.priority?1:-1;
-    })
-  }
-
-  this.sortEffects();
 }

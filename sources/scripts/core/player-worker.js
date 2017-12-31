@@ -37,11 +37,11 @@ var CPlayerWorker = function()
   {
     var envelope_shape = instr.i[3];
     var envelope_curve = instr.i[18] / 255.0;
-
-    var osc1 = mOscillators[signal_processor.osc_to_waveform(instr.i[0])[0]],
+    var wav = signal_processor.osc_to_waveform(instr.i[0])
+    var osc1 = mOscillators[wav[0]],
         o1vol = 255 - instr.i[1],
         o1xenv = instr.i[3],
-        osc2 = mOscillators[signal_processor.osc_to_waveform(instr.i[0])[1]],
+        osc2 = mOscillators[wav[1]],
         o2vol = 255 - (255 - instr.i[1]),
         o2xenv = instr.i[3],
         noiseVol = instr.i[13],

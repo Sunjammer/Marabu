@@ -1,9 +1,11 @@
 function UI_Choice(data)
 {
-  this.family = null;
   this.id = data.id;
   this.name = data.name;
   this.choices = data.choices;
+  this.min = data.min;
+  this.max = data.max;
+  this.path = null
 
   this.control = 0;
 
@@ -15,8 +17,9 @@ function UI_Choice(data)
 
   var target = this;
 
-  this.install = function(parent)
+  this.install = function(parent, path)
   {
+    this.path = path;
     this.el = document.createElement("div");
     this.name_el = document.createElement("t");
     this.value_el = document.createElement("t");

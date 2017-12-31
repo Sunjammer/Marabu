@@ -10,7 +10,8 @@
     <script src="scripts/ui/slider.js"></script>
     <script src="scripts/ui/choice.js"></script>
     <script src="scripts/ui/uv.js"></script>
-    <script src="scripts/ui/instrument-ui.js"></script>
+    <script src="scripts/ui/instrument-proxy.js"></script>
+    <script src="scripts/ui/instrument-editor.js"></script>
 
     <script src="scripts/core/blob.js"></script>
     <script src="scripts/core/filesaver.js"></script>
@@ -23,8 +24,8 @@
     <script src="scripts/theme.js"></script>
 
     <script src="scripts/track.js"></script>
+    <script src="scripts/state.js"></script>
     <script src="scripts/song.js"></script>
-    <script src="scripts/instrument.js"></script>
     <script src="scripts/editor.js"></script>
     <script src="scripts/sequencer.js"></script>
 
@@ -36,9 +37,6 @@
   </head>
   <body>
     <script>
-      const {dialog} = require('electron').remote;
-      const fs = require('fs');
-
       var marabu = new Marabu();
       marabu.start();
     </script>

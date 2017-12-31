@@ -20,48 +20,62 @@ function Marabu()
   this.song = new Song();
   this.sequencer = new Sequencer();
   this.editor = new Editor(8,4);
-  this.instrumentUI = new InstrumentUI();
+  this.instrumentEditor = new InstrumentEditor();
   this.cheatcode = new Cheatcode();
   this.loop = new Loop();
 
   this.start = function()
   {
-    this.wrapper_el.innerHTML += "<div id='sequencer'><table class='tracks' id='sequencer-table'></table></div><yu id='scrollbar'></yu><yu id='position'></yu>";
-    this.wrapper_el.innerHTML += this.editor.build();
-    this.wrapper_el.innerHTML += this.instrumentUI.build();
+    try{
+      this.wrapper_el.innerHTML += "<div id='sequencer'><table class='tracks' id='sequencer-table'></table></div><yu id='scrollbar'></yu><yu id='position'></yu>";
+      this.wrapper_el.innerHTML += this.editor.build();
+      this.wrapper_el.innerHTML += this.instrumentEditor.build();
 
-    this.song.init();
-    this.theme.start();
+      this.song.init();
+      this.theme.start();
 
-    this.sequencer.start();
-    this.editor.start();
-    this.instrumentUI.start();  
+      this.sequencer.start();
+      this.editor.start();
+      this.instrumentEditor.start();  
 
-    this.song.update();
-    this.sequencer.update();
-    this.editor.update();
-    this.instrumentUI.update();
+      this.song.update();
+      this.sequencer.update();
+      this.editor.update();
+      this.instrumentEditor.setInstrument(this.song.instrument())
+      this.instrumentEditor.update();
+    }catch(e){
+      console.error(e)
+    }
   }
 
-  this.update = function()
-  {
+  this.updateSelection = function(){
     this.selection.instrument = clamp(this.selection.instrument,0,this.channels-1);
     this.selection.track = clamp(this.selection.track,0,this.sequencer.length-1);
     this.selection.row = clamp(this.selection.row,0,31);
     this.selection.octave = clamp(this.selection.octave,3,8);
-    this.selection.control = clamp(this.selection.control,0,23);
+    this.selection.control = clamp(this.selection.control, 0, INSTRUMENT_NUM_CONTROLS);
+    console.log("Waa? "+this.selection.control);
 
+    this.update()
+  }
+
+  this.update = function()
+  {
     this.song.update();
     this.sequencer.update();
     this.editor.update();
-    this.instrumentUI.update();
+    this.instrumentEditor.update();
   }
 
   // Controls
 
   this.move_inst = function(mod)
   {
+    var inst = this.selection.instrument;
     this.selection.instrument += mod;
+    if(this.selection.instrument!=inst){
+      this.instrumentEditor.setInstrument(this.song.instrument())
+    }
     this.update();
   }
 
@@ -93,14 +107,19 @@ function Marabu()
 
   this.move_control = function(mod)
   {
-    this.selection.control += mod;
-    this.update();
+    console.log("move_control")
+    try{
+      this.selection.control += mod;
+      this.updateSelection();
+    }catch(e){
+      console.error(e);
+    }
   }
 
   this.move_effect = function(mod){
     //Is the selection an effect?
     if(this.selection.control>=17 && this.selection.control<24){ //TODO: Better grouping plz
-      console.dir(this.instrumentUI);
+      console.dir(this.instrumentEditor);
       console.log("Move " + this.selection.control + " : " + mod)
     }
   }
@@ -114,15 +133,15 @@ function Marabu()
 
   this.move_control_value = function(mod,relative)
   {
-    var control = this.instrumentUI.control_target(this.selection.control);
+    var control = this.instrumentEditor.control_target(this.selection.control);
     control.mod(mod,relative);
     control.save();
   }
 
   this.add_control_value = function()
   {
-    var control = this.instrumentUI.control_target(this.selection.control);
-    var control_storage = this.instrumentUI.get_storage(control.family+"_"+control.id);
+    var control = this.instrumentEditor.control_target(this.selection.control);
+    var control_storage = this.instrumentEditor.get_storage(control.family+"_"+control.id);
     var control_value = control.value;
 
     this.song.inject_effect_at(this.selection.instrument,this.selection.track,this.selection.row,control_storage+1,control_value);
@@ -131,8 +150,8 @@ function Marabu()
 
   this.remove_control_value = function()
   {
-    var control = this.instrumentUI.control_target(this.selection.control);
-    var control_storage = this.instrumentUI.get_storage(control.family+"_"+control.id);
+    var control = this.instrumentEditor.control_target(this.selection.control);
+    var control_storage = this.instrumentEditor.get_storage(control.family+"_"+control.id);
     var control_value = control.value;
 
     this.song.erase_effect_at(this.selection.instrument,this.selection.track,this.selection.row);
@@ -181,7 +200,7 @@ function Marabu()
   {
     console.log("Stop!");
     this.song.stop_song();
-    this.instrumentUI.controls.uv.monitor.clear();
+    this.instrumentEditor.controls.uv.monitor.clear();
     this.is_playing = false;
     this.selection.row = 0;  
   }
