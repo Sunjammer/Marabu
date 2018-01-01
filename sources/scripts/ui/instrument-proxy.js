@@ -35,7 +35,6 @@ function Group(id, items){
       var delim = '.'
       path = path.split(delim)
     }
-    console.log("Group try get "+path)
     if(path.length==1 && path[0] == this.id)
       return this
     for(var i=0; i<this.items.length;i++){

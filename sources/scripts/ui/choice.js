@@ -62,7 +62,6 @@ function UI_Choice(data)
   this.save = function()
   {
     var storage_id = marabu.instrumentEditor.currentInstrument.get_storage(this.path);
-    console.log("Saving control: "+storage_id)
     marabu.song.inject_control(marabu.selection.instrument, storage_id, this.index % this.choices.length);
   }
 
