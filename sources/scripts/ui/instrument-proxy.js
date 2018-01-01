@@ -105,6 +105,10 @@ function InstrumentProxy(data)
     ])
   ]);
 
+  this.get = function(path){
+    return this.controls.get(path)
+  }
+
   this.getAllControls = function(){
     return this.controls.flatten().map(function(c) { return c.control })
   }

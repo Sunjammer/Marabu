@@ -45,6 +45,11 @@ function InstrumentEditor(){
         marabu.song.mJammer_update();
     }
 
+    this.get = function(path){
+        if(this.currentInstrument!=null)
+            return this.currentInstrument.get(path)
+    }
+
     this.setInstrument = function(instrument){
         this.clear();
         this.currentInstrument = new InstrumentProxy(instrument)
