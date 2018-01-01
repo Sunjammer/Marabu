@@ -354,11 +354,13 @@ var Song = function()
   this.init = function ()
   {
     var i, j, o;
-
     // Create audio element, and always play the audio as soon as it's ready
     mAudio = new Audio();
     mAudioTimer.setAudioElement(mAudio);
-    mAudio.addEventListener("canplay", function (){ this.play(); }, true);
+    mAudio.addEventListener("canplay", function (){ 
+      console.log("canplay")
+      this.play(); 
+    }, true);
 
     mSong = new Track();
 
@@ -383,7 +385,6 @@ var CAudioTimer = function ()
   {
     if (!mAudioElement)
       return 0;
-
     // Calculate current time according to Date()
     var t = (new Date()).getTime() * 0.001;
     var currentTime = t - mStartT;
@@ -410,7 +411,8 @@ var CAudioTimer = function ()
     mErrHist[mErrHistPos] = err;
     mErrHistPos = (mErrHistPos + 1) % mErrHist.length;
 
-    return currentTime + comp;
+    var t = currentTime + comp
+    return t;
   };
 
   this.reset = function ()

@@ -42,12 +42,12 @@ function InstrumentEditor(){
             ctrl.override(value);
             ctrl.setSelected(marabu.selection.control==idx++);
         })
-        //marabu.song.mJammer_update();
+        marabu.song.mJammer_update();
     }
 
-    this.get = function(path){
+    this.getControl = function(path){
         if(this.currentInstrument!=null)
-            return this.currentInstrument.get(path)
+            return this.currentInstrument.get(path).control
     }
 
     this.setInstrument = function(instrument){

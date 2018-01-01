@@ -18,13 +18,11 @@ function Follower()
     if (marabu.song.mAudio().ended || (marabu.song.mAudio().duration && ((marabu.song.mAudio().duration - t) < 0.1))) {
       clearInterval(this.timer);
       this.timer = -1;
-      marabu.instrumentEditor.get("master.monitor").draw(-1);
+      marabu.instrumentEditor.getControl("master.monitor").draw(-1);
       return;
     }
-
-
-    marabu.instrumentEditor.get("master.monitor").draw(t);
-
+    marabu.instrumentEditor.getControl("master.monitor").draw(t);
+    
     var n = Math.floor(t * 44100 / marabu.song.song().rowLen);
     var r = n % 32;
 
@@ -43,6 +41,6 @@ function Follower()
     clearInterval(this.timer);
     this.timer = -1;
     marabu.update();
-    marabu.instrumentEditor.get("master.monitor").draw(-1);
+    marabu.instrumentEditor.getControl("master.monitor").draw(-1);
   }
 }
