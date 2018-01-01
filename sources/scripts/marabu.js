@@ -1,3 +1,5 @@
+var console = require('console')
+
 var INSTRUMENT_NUM_CONTROLS = 24;
 
 function Marabu()
