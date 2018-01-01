@@ -33,7 +33,7 @@ var Song = function()
 
   this.update_bpm = function(bpm)
   {
-    console.log(bpm)
+    console.log("BPM: "+bpm)
     mSong.rowLen = calcSamplesPerRow(bpm);
     mJammer.updateRowLen(mSong.rowLen);
   }
@@ -221,10 +221,10 @@ var Song = function()
 
   var generateAudio = function(doneFun, opts, override_song = null)
   {
+
     var display_time_el = document.getElementById("fxr30");
     var display_progress_el = document.getElementById("fxr31");
 
-    console.log(override_song)
     var song = mSong;
 
     var render_time = marabu.song.calculate_time();
@@ -274,7 +274,6 @@ var Song = function()
   this.play_song = function()
   {
     mAudio.removeEventListener('ended', marabu.song.start_over, false);
-
     this.update();
     this.update_bpm(this.song().bpm);
     this.update_rpp(32);
@@ -293,7 +292,7 @@ var Song = function()
     generateAudio(doneFun);
   }
 
-  this.play_loop = function(opts,looped_song)
+  this.play_loop = function(opts, looped_song)
   {
     mAudio.addEventListener('ended', marabu.song.start_over, false);
 

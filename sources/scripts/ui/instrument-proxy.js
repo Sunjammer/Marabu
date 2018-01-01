@@ -5,7 +5,6 @@ function Control(id, control){
   this.control.control = 0
   this.install = function(parent, path){
     var fc = path==""?"":path+"."+this.id
-    console.log(fc)
     this.control.install(parent, fc)
   }
   this.get = function(path){
@@ -59,8 +58,6 @@ function Group(id, items){
     }, [])
   }
 }
-
-var INSTRUMENT_NUM_CONTROLS = 24;
 
 function InstrumentProxy(data)
 {
@@ -149,7 +146,6 @@ function InstrumentProxy(data)
       case 'uv.monitor'         : return null
     }
 
-    console.log("Unknown path: "+path);
     return -1;
   }
 }

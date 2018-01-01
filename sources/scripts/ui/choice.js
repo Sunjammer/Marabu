@@ -52,7 +52,7 @@ function UI_Choice(data)
 
   this.override = function(v)
   {
-    if(v == null){ console.log("Missing control value",this.family+"."+this.id); return;}
+    if(v == null){ console.log("Missing control value",this.path); return;}
 
     var v = v % this.choices.length;
     this.index = v;
@@ -61,22 +61,25 @@ function UI_Choice(data)
 
   this.save = function()
   {
-    var storage_id = marabu.instrument.get_storage(this.family+"_"+this.id);
-    marabu.song.inject_control(marabu.selection.instrument,storage_id,this.index % this.choices.length);
+    var storage_id = marabu.instrumentEditor.currentInstrument.get_storage(this.path);
+    console.log("Saving control: "+storage_id)
+    marabu.song.inject_control(marabu.selection.instrument, storage_id, this.index % this.choices.length);
   }
 
   this.update = function()
   {
     var target = this.choices[this.index % this.choices.length];
     this.value_el.textContent = target;
-    
-    this.el.className = marabu.selection.control == this.control ? "bl" : "";
-    this.name_el.className = marabu.selection.control == this.control ? "fh" : "fm";
   }
 
   this.mouse_down = function(e)
   {
     marabu.selection.control = target.control;
     marabu.update();
+  }
+
+  this.setSelected = function(v){
+    this.el.className = v ? "bl" : "";
+    this.name_el.className = v ? "fh" : "fm";
   }
 }

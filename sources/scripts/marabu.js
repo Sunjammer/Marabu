@@ -1,3 +1,5 @@
+var INSTRUMENT_NUM_CONTROLS = 24;
+
 function Marabu()
 {
   this.theme = new Theme();
@@ -41,6 +43,7 @@ function Marabu()
       this.song.update();
       this.sequencer.update();
       this.editor.update();
+
       this.instrumentEditor.setInstrument(this.song.instrument())
       this.instrumentEditor.update();
     }catch(e){
@@ -54,9 +57,12 @@ function Marabu()
     this.selection.row = clamp(this.selection.row,0,31);
     this.selection.octave = clamp(this.selection.octave,3,8);
     this.selection.control = clamp(this.selection.control, 0, INSTRUMENT_NUM_CONTROLS);
-    console.log("Waa? "+this.selection.control);
 
-    this.update()
+    try{
+      this.update()
+    }catch(e){
+      console.error(e)
+    }
   }
 
   this.update = function()
@@ -73,6 +79,7 @@ function Marabu()
   {
     var inst = this.selection.instrument;
     this.selection.instrument += mod;
+    this.selection.instrument = clamp(this.selection.instrument, 0, 15); 
     if(this.selection.instrument!=inst){
       this.instrumentEditor.setInstrument(this.song.instrument())
     }
@@ -107,7 +114,6 @@ function Marabu()
 
   this.move_control = function(mod)
   {
-    console.log("move_control")
     try{
       this.selection.control += mod;
       this.updateSelection();
@@ -134,8 +140,12 @@ function Marabu()
   this.move_control_value = function(mod,relative)
   {
     var control = this.instrumentEditor.control_target(this.selection.control);
-    control.mod(mod,relative);
-    control.save();
+    try{
+      control.mod(mod,relative);
+      control.save();
+    }catch(e){
+      console.error(e)
+    }
   }
 
   this.add_control_value = function()

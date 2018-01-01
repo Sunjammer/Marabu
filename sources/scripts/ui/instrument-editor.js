@@ -10,7 +10,6 @@ function InstrumentEditor(){
 
     this.install = function(group, parentElement)
     {
-        console.log("Installing "+group)
         var rootElement = document.createElement("div");
         rootElement.className = "family";
         parentElement.appendChild(rootElement);
@@ -28,20 +27,20 @@ function InstrumentEditor(){
 
     this.control_target = function(target_control)
     {
-        for(family_id in this.controls)
-        for(control_id in this.controls[family_id])
-            if(this.controls[family_id][control_id].control == target_control)
-            return this.controls[family_id][control_id];
+        var ctrls = this.currentInstrument.getAllControls();
+        return ctrls[target_control]
     }
 
     this.update = function()
     {
         var instr = this.currentInstrument
         var ctrls = instr.getAllControls();
+        var idx = 0
         ctrls.forEach(function(ctrl){
             var ctrl_storage = instr.get_storage(ctrl.path)
             var value = marabu.song.control_at(marabu.selection.instrument, ctrl_storage);
             ctrl.override(value);
+            ctrl.setSelected(marabu.selection.control==idx++);
         })
         marabu.song.mJammer_update();
     }

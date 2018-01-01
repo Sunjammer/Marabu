@@ -145,6 +145,11 @@ function UI_Uv()
     
   }
 
+  this.setSelected = function()
+  {
+    
+  }
+
   this.update = function()
   {
     this.draw(-1);

@@ -66,7 +66,7 @@ function UI_Slider(data)
 
   this.override = function(v)
   {
-    if(v == null){ console.log("Missing control value",this.family+"."+this.id); return;}
+    if(v == null){ console.log("Missing control value",this.path); return;}
 
     this.value = parseInt(v);
     this.value = clamp(this.value,this.min,this.max);
@@ -75,15 +75,13 @@ function UI_Slider(data)
 
   this.save = function()
   {
-    var storage_id = marabu.instrument.get_storage(this.family+"_"+this.id);
+    var storage_id = marabu.instrumentEditor.currentInstrument.get_storage(this.path);
+    console.log("Saving slider: "+storage_id)
     marabu.song.inject_control(marabu.selection.instrument,storage_id,this.value);
   }
 
   this.update = function()
   {
-    this.el.className = app.selection.control == this.control ? "slider bl" : "slider";
-    this.name_el.className = app.selection.control == this.control ? "fh" : "fm";
-
     var val = parseInt(this.value) - parseInt(this.min);
     var over = parseFloat(this.max) - parseInt(this.min);
     var perc = val/parseFloat(over);
@@ -100,5 +98,10 @@ function UI_Slider(data)
   {
     app.selection.control = self.control;
     app.update();
+  }
+
+  this.setSelected = function(v){
+    this.el.className = v ? "slider bl" : "slider";
+    this.name_el.className = v ? "fh" : "fm";
   }
 }
