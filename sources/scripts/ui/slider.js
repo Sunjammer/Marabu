@@ -4,7 +4,7 @@ function UI_Slider(data)
   var self = this;
 
   this.id = data.id;
-  this.name = data.name;
+  this.label = data.label;
   this.min = data.min;
   this.max = data.max;
   this.path = null
@@ -31,7 +31,7 @@ function UI_Slider(data)
 
     // Name Span
     this.name_el.className = "name";
-    this.name_el.innerHTML = this.name;
+    this.name_el.innerHTML = this.label;
     this.name_el.style.width = "30px";
     this.name_el.style.display = "inline-block";
 

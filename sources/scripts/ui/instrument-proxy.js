@@ -63,43 +63,43 @@ function InstrumentProxy(data)
   this.data = data
   this.controls = new Group("controls", [
     new Group("envelope", [
-      new Control("type",       new UI_Choice({name: "ENV", choices: ["NONE","WEAK","AVRG","HARD"] })),
-      new Control("attack",     new UI_Slider({name: "ATK", min: 0,  max: 255 })),
-      new Control("sustain",    new UI_Slider({name: "SUS", min: 0,  max: 255 })),
-      new Control("release",    new UI_Slider({name: "REL", min: 0,  max: 255 })),
-      new Control("curve",      new UI_Slider({name: "POW", min: 12, max: 255 }))
+      new Control("type",       new UI_Choice({label: "ENV", choices: ["NONE","WEAK","AVRG","HARD"] })),
+      new Control("attack",     new UI_Slider({label: "ATK", min: 0,  max: 255 })),
+      new Control("sustain",    new UI_Slider({label: "SUS", min: 0,  max: 255 })),
+      new Control("release",    new UI_Slider({label: "REL", min: 0,  max: 255 })),
+      new Control("curve",      new UI_Slider({label: "POW", min: 12, max: 255 }))
     ]),
     new Group("osc", [
-      new Control("shape",        new UI_Choice({name: "OSC", choices: ["SIN","SINSQR","SINSAW","SINTRI","SQR","SQRSIN","SQRSAW","SQRTRI","SAW","SAWSIN","SAWSQR","SAWTRI","TRI","TRISIN","TRISQR","TRISAW","NOISE","PULSE","REVSAW"]})),
-      new Control("frequency",    new UI_Slider({name: "FRQ", min: 92,  max: 164 })),
-      new Control("mix",          new UI_Slider({name: "MIX", min: 0,  max: 255, center:true })),
-      new Control("detune",       new UI_Slider({name: "DET", min: 0,  max: 255 }))
+      new Control("shape",        new UI_Choice({label: "OSC", choices: ["SIN","SINSQR","SINSAW","SINTRI","SQR","SQRSIN","SQRSAW","SQRTRI","SAW","SAWSIN","SAWSQR","SAWTRI","TRI","TRISIN","TRISQR","TRISAW","NOISE","PULSE","REVSAW"]})),
+      new Control("frequency",    new UI_Slider({label: "FRQ", min: 92,  max: 164 })),
+      new Control("mix",          new UI_Slider({label: "MIX", min: 0,  max: 255, center:true })),
+      new Control("detune",       new UI_Slider({label: "DET", min: 0,  max: 255 }))
     ]),
     new Group("lfo", [
-      new Control("shape",        new UI_Choice({name: "LFO", choices: ["SIN","SQR","SAW","TRI","NOISE","REVSAW","PULSE"] })),
-      new Control("frequency",    new UI_Slider({name: "FRQ", min: 2,  max: 12 })),
-      new Control("amount",       new UI_Slider({name: "AMT", min: 0,  max: 255 }))
+      new Control("shape",        new UI_Choice({label: "LFO", choices: ["SIN","SQR","SAW","TRI","NOISE","REVSAW","PULSE"] })),
+      new Control("frequency",    new UI_Slider({label: "FRQ", min: 2,  max: 12 })),
+      new Control("amount",       new UI_Slider({label: "AMT", min: 0,  max: 255 }))
     ]),
     new Group("effects", [
       new Group("delay", [
-        new Control("rate",       new UI_Choice({name: "DLY", choices: ["OFF","1/2","1/3","1/4","1/6","1/8","1/12","1/16"] })),
-        new Control("amount",     new UI_Slider({name: "AMT", min: 0,  max: 255 }))
+        new Control("rate",       new UI_Choice({label: "DLY", choices: ["OFF","1/2","1/3","1/4","1/6","1/8","1/12","1/16"] })),
+        new Control("amount",     new UI_Slider({label: "AMT", min: 0,  max: 255 }))
       ]),
       new Group("filter", [
-        new Control("shape",      new UI_Choice({name: "FLT", choices: ["LP","HP","LP","BP"] })),
-        new Control("frequency",  new UI_Slider({name: "FRQ", min: 0,  max: 255 })),
-        new Control("resonance",  new UI_Slider({name: "RES", min: 0,  max: 254 }))
+        new Control("shape",      new UI_Choice({label: "FLT", choices: ["LP","HP","LP","BP"] })),
+        new Control("frequency",  new UI_Slider({label: "FRQ", min: 0,  max: 255 })),
+        new Control("resonance",  new UI_Slider({label: "RES", min: 0,  max: 254 }))
       ]),
-      new Control("noise",      new UI_Slider({name: "NOI", min: 0,  max: 255 })),
-      new Control("bit",        new UI_Slider({name: "BIT", min: 0,  max: 255 })),
-      new Control("distortion", new UI_Slider({name: "DIS", min: 0,  max: 64  })),
-      new Control("pinking",    new UI_Slider({name: "PIN", min: 0,  max: 255 })),
-      new Control("compressor", new UI_Slider({name: "CMP", min: 0,  max: 255 })),
-      new Control("drive",      new UI_Slider({name: "DRV", min: 0,  max: 255 })),
-      new Control("shape",      new UI_Slider({name: "SHP", min: 0,  max: 255, center:true }))
+      new Control("noise",      new UI_Slider({label: "NOI", min: 0,  max: 255 })),
+      new Control("bit",        new UI_Slider({label: "BIT", min: 0,  max: 255 })),
+      new Control("distortion", new UI_Slider({label: "DIS", min: 0,  max: 64  })),
+      new Control("pinking",    new UI_Slider({label: "PIN", min: 0,  max: 255 })),
+      new Control("compressor", new UI_Slider({label: "CMP", min: 0,  max: 255 })),
+      new Control("drive",      new UI_Slider({label: "DRV", min: 0,  max: 255 })),
+      new Control("shape",      new UI_Slider({label: "SHP", min: 0,  max: 255, center:true }))
     ]),
     new Group("master", [
-      new Control("pan", new UI_Slider({name: "PAN", min: 0,  max: 255, center:true })),
+      new Control("pan", new UI_Slider({label: "PAN", min: 0,  max: 255, center:true })),
       new Control("monitor", new UI_Uv())
     ])
   ]);

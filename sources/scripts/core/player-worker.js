@@ -142,12 +142,14 @@ var CPlayerWorker = function()
     this.lastRow = song.endPattern - 1;
     this.firstCol = 0;
     this.lastCol = 15;
+    this.playbackOffset = 0.0;
 
     if(opts) {
       this.firstRow = opts.firstRow;
       this.lastRow = opts.lastRow;
       this.firstCol = opts.firstCol;
       this.lastCol = opts.lastCol;
+      this.playbackOffset = opts.playbackOffset;
     }
 
     // Prepare song info

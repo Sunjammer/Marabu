@@ -53,22 +53,14 @@ function Marabu()
     }
   }
 
-  this.updateSelection = function(){
+  this.update = function()
+  {
     this.selection.instrument = clamp(this.selection.instrument,0,this.channels-1);
     this.selection.track = clamp(this.selection.track,0,this.sequencer.length-1);
     this.selection.row = clamp(this.selection.row,0,31);
     this.selection.octave = clamp(this.selection.octave,3,8);
     this.selection.control = clamp(this.selection.control, 0, INSTRUMENT_NUM_CONTROLS);
 
-    try{
-      this.update()
-    }catch(e){
-      console.error(e)
-    }
-  }
-
-  this.update = function()
-  {
     this.song.update();
     this.sequencer.update();
     this.editor.update();
@@ -118,7 +110,7 @@ function Marabu()
   {
     try{
       this.selection.control += mod;
-      this.updateSelection();
+      this.update();
     }catch(e){
       console.error(e);
     }
@@ -197,14 +189,13 @@ function Marabu()
   }
 
   // Methods
-
   this.is_playing = false;
 
-  this.play = function()
+  this.play = function(cmd)
   {
-    if(this.selection.row > 0){ this.stop(); return; }
+    if(this.is_playing){ this.stop(); return; } //TODO: If cmd is loop, just set loop if already playing
     console.log("Play!");
-    this.song.play_song();
+    this.song.play_song(cmd);
     this.is_playing = true;
   }
 
@@ -212,9 +203,9 @@ function Marabu()
   {
     console.log("Stop!");
     this.song.stop_song();
-    this.instrumentEditor.controls.uv.monitor.clear();
+    this.instrumentEditor.getControl("master.monitor").clear();
     this.is_playing = false;
-    this.selection.row = 0;  
+    //this.selection.row = 0;  
   }
 
   this.path = null;
@@ -334,7 +325,7 @@ function Marabu()
     if(marabu.loop.is_active == true){ marabu.loop.input(e); return; }
 
     if(key == "Escape"){ marabu.stop(); return; }
-    if(key == " "){ marabu.play(); e.preventDefault(); return; }
+    if(key == " "){ marabu.play(new PlayCommand(e.shiftKey, e.ctrlKey)); e.preventDefault(); return; }
 
     // Arrows
 

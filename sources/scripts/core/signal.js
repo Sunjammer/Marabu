@@ -1,36 +1,35 @@
 function Signal_Processor()
 {
-  this.knobs = {distortion:null,pinking:null,compressor:null,drive:null,bit_phaser:null,bit_step:null,pan:null,shape:null};
+  var self = this
+  this.knobs = {
+    distortion:null,
+    pinking:null,
+    compressor:null,
+    drive:null,
+    bit_phaser:null,
+    bit_step:null,
+    pan:null,
+    shape:null
+  };
 
   this.step_last = 0;
   this.phase = 0;
   this.average = 0;
 
-  this.defaultEffectChain = [
-    this.effect_bitcrusher,
-    this.effect_distortion,
-    this.effect_pinking,
-    this.effect_compressor,
-    this.effect_drive,
-    this.effect_shape
-  ]
-
-  this.effectChain = this.defaultEffectChain.concat();
-
   this.operate = function(input)
   {
     var output = input;
 
-    for(var i=0; i<this.effectChain.length;i++){
-      output = this.effectChain[i](output);
+    for(var i=0; i<self.effectChain.length;i++){
+      output = self.effectChain[i](output);
     }
 
 
-    this.average = ((this.average * ((this.knobs.compressor) * 1000)) + output)/(((this.knobs.compressor) * 1000)+1);
+    self.average = ((self.average * ((self.knobs.compressor) * 1000)) + output)/(((self.knobs.compressor) * 1000)+1);
 
     // Pan
-    var left = output * (1 - this.knobs.pan);
-    var right = output * (this.knobs.pan);
+    var left = output * (1 - self.knobs.pan);
+    var right = output * (self.knobs.pan);
 
     return {left:left,right:right};
   }
@@ -38,16 +37,16 @@ function Signal_Processor()
   this.effect_bitcrusher = function(input)
   {
     var output = input;
-
-    this.phase += this.knobs.bit_phaser; // Between 0.1 and 1
+    
+    self.phase += self.knobs.bit_phaser; // Between 0.1 and 1
     var step = Math.pow(1/2, step); // between 1 and 16
 
-    if(this.phase >= 1.0) {
-      this.phase -= 1.0;
-      this.step_last = this.knobs.bit_step * Math.floor(output / step + 0.5);
+    if(self.phase >= 1.0) {
+      self.phase -= 1.0;
+      self.step_last = self.knobs.bit_step * Math.floor(output / step + 0.5);
     }
 
-    output = this.knobs.bit_step < 16 ? this.step_last : output;
+    output = self.knobs.bit_step < 16 ? self.step_last : output;
 
     return output;
   }
@@ -56,7 +55,7 @@ function Signal_Processor()
 
   this.effect_pinking = function(input)
   {
-    var val = this.knobs.pinking;
+    var val = self.knobs.pinking;
     b0 = 0.99886 * b0 + input * 0.0555179;
     b1 = 0.99332 * b1 + input * 0.0750759;
     b2 = 0.96900 * b2 + input * 0.1538520;
@@ -71,12 +70,12 @@ function Signal_Processor()
 
   this.effect_compressor = function(input)
   {
-    var val = this.knobs.compressor;
+    var val = self.knobs.compressor;
     var output = input;
-    if(input > this.average){
+    if(input > self.average){
       output *= 1 + val;
     }
-    else if(input < this.average){
+    else if(input < self.average){
       output *= 1 - val;
     }
     return output;
@@ -84,7 +83,7 @@ function Signal_Processor()
 
   this.effect_distortion = function(input)
   {
-    var val = this.knobs.distortion;
+    var val = self.knobs.distortion;
     if(!val){ return input; }
 
     var output = input;
@@ -96,17 +95,28 @@ function Signal_Processor()
 
   this.effect_shape = function(input)
   {
-    var val = this.knobs.shape;
+    var val = self.knobs.shape;
     var k = 2.0 * val / (1.0 - val);
     return (1.0 + k) * input / (1.0 + k * Math.abs(input));
   }
 
   this.effect_drive = function(input)
   {
-    var val = this.knobs.drive;
+    var val = self.knobs.drive;
     var output = input;
     return output * val;
   }
+  
+  this.defaultEffectChain = [
+    self.effect_bitcrusher,
+    self.effect_distortion,
+    self.effect_pinking,
+    self.effect_compressor,
+    self.effect_drive,
+    self.effect_shape
+  ]
+
+  this.effectChain = this.defaultEffectChain.concat();
 
   // Tools
 

@@ -1,7 +1,7 @@
 function UI_Choice(data)
 {
   this.id = data.id;
-  this.name = data.name;
+  this.label = data.label;
   this.choices = data.choices;
   this.min = data.min;
   this.max = data.max;
@@ -27,7 +27,7 @@ function UI_Choice(data)
     this.el.style.padding = "0px 2.5px";
     // Name Span
     this.name_el.className = "name";
-    this.name_el.innerHTML = this.name;
+    this.name_el.innerHTML = this.label;
     this.name_el.style.width = "30px";
     this.name_el.style.display = "inline-block";
 

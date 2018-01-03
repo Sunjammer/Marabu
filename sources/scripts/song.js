@@ -1,5 +1,6 @@
 var Song = function()
 {
+  var self = this;
   var MAX_SONG_ROWS = 32,
       MAX_PATTERNS = 32;
 
@@ -65,8 +66,8 @@ var Song = function()
 
     mSong = new_song;
 
-    this.update_bpm(mSong.bpm ? mSong.bpm : 120);
-    this.update_rpp(32);
+    self.update_bpm(mSong.bpm ? mSong.bpm : 120);
+    self.update_rpp(32);
 
     updateSongRanges();
   }
@@ -78,65 +79,65 @@ var Song = function()
 
   this.instrument = function(id = marabu.selection.instrument)
   {
-    return this.song().songData[id];
+    return self.song().songData[id];
   }
 
   //
 
   this.pattern_at = function(i,t)
   {
-    return this.song().songData[i].p[t];
+    return self.song().songData[i].p[t];
   }
 
   this.inject_pattern_at = function(i,t,v)
   {
-    this.song().songData[i].p[t] = v;
-    this.update_ranges();
+    self.song().songData[i].p[t] = v;
+    self.update_ranges();
     marabu.update();
   }
 
   this.note_at = function(i,t,n)
   {
-    var c = this.pattern_at(i,t)-1; if(c == -1){ return; }
-    return this.song().songData[i].c[c].n[n];
+    var c = self.pattern_at(i,t)-1; if(c == -1){ return; }
+    return self.song().songData[i].c[c].n[n];
   }
 
   this.inject_note_at = function(i,t,n,v)
   {
-    var c = this.pattern_at(i,t)-1; if(c == -1){ return; }
-    this.song().songData[i].c[c].n[n] = (v == -87 ? 0 : clamp(v,36,107)+87);
+    var c = self.pattern_at(i,t)-1; if(c == -1){ return; }
+    self.song().songData[i].c[c].n[n] = (v == -87 ? 0 : clamp(v,36,107)+87);
   }
 
   this.effect_at = function(i,t,f)
   {
-    var c = this.pattern_at(i,t)-1; if(c == -1){ return; }
-    return this.song().songData[i].c[c].f[f];
+    var c = self.pattern_at(i,t)-1; if(c == -1){ return; }
+    return self.song().songData[i].c[c].f[f];
   }
 
   this.inject_effect_at = function(i,t,f,cmd,val)
   {
     if(!cmd || val === undefined){ return; }
-    var c = this.pattern_at(i,t)-1; if(c == -1){ return; }
-    this.song().songData[i].c[c].f[f] = cmd;
-    this.song().songData[i].c[c].f[f+32] = val;
+    var c = self.pattern_at(i,t)-1; if(c == -1){ return; }
+    self.song().songData[i].c[c].f[f] = cmd;
+    self.song().songData[i].c[c].f[f+32] = val;
   }
 
   this.erase_effect_at = function(i,t,f)
   {
-    var c = this.pattern_at(i,t)-1; if(c == -1){ return; }
-    this.song().songData[i].c[c].f[f] = 0;
-    this.song().songData[i].c[c].f[f+32] = 0;
+    var c = self.pattern_at(i,t)-1; if(c == -1){ return; }
+    self.song().songData[i].c[c].f[f] = 0;
+    self.song().songData[i].c[c].f[f+32] = 0;
   }
 
   this.control_at = function(i,s)
   {
-    return this.song().songData[i].i[s];
+    return self.song().songData[i].i[s];
   }
 
   this.inject_control = function(i,s,v)
   {
-    this.song().songData[i].i[s] = v;
-    this.mJammer_update();
+    self.song().songData[i].i[s] = v;
+    self.mJammer_update();
   }
 
   var setPatternLength = function (length)
@@ -221,7 +222,6 @@ var Song = function()
 
   var generateAudio = function(doneFun, opts, override_song = null)
   {
-
     var display_time_el = document.getElementById("fxr30");
     var display_progress_el = document.getElementById("fxr31");
 
@@ -247,14 +247,21 @@ var Song = function()
         display_progress_el.textContent = prepend_to_length(parseInt(progress * 100),4,"0");
       }
     });
+
   };
+
+  this.prevTime = 0.0
+
+  this.getPrevTime = function(){
+    return 1.0
+  }
 
   var stopAudio = function ()
   {
     marabu.sequencer.follower.stop();
     if(mAudio) {
       mAudio.pause();
-      mAudioTimer.reset();
+      mAudioTimer.reset(self.getPrevTime());
     }
   };
 
@@ -267,39 +274,48 @@ var Song = function()
 
   this.start_over = function()
   {
-    this.currentTime = 0; 
-    this.play();
+    self.currentTime = 0; 
+    self.play();
   }
 
-  this.play_song = function()
+  this.play_song = function(cmd)
   {
     mAudio.removeEventListener('ended', marabu.song.start_over, false);
-    this.update();
-    this.update_bpm(this.song().bpm);
-    this.update_rpp(32);
+    self.update();
+    self.update_bpm(self.song().bpm);
+    self.update_rpp(32);
 
     stopAudio();
     updateSongRanges();
+    
+    var options = {
+      firstRow : 0,
+      lastRow : mSong.endPattern - 1,
+      firstCol : 0,
+      lastCol : 15,
+      offset : 1.0
+    }
 
     var doneFun = function(wave)
     {
       console.log("playing..")
       marabu.sequencer.follower.start();
       mAudio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
-      mAudioTimer.reset();
+      mAudioTimer.reset(cmd.playFromStart?0.0:self.getPrevTime());
       mAudio.play();
     };
-    generateAudio(doneFun);
+    generateAudio(doneFun, options);
   }
 
   this.play_loop = function(opts, looped_song)
   {
+    //TODO: Remove this entire function in favor of loop flag in play command
     mAudio.addEventListener('ended', marabu.song.start_over, false);
 
-    this.update_bpm(this.song().bpm);
-    this.update_rpp(32);
+    self.update_bpm(self.song().bpm);
+    self.update_rpp(32);
 
-    this.stop_song();
+    self.stop_song();
     updateSongRanges();
 
     var offset = opts.firstRow;
@@ -309,10 +325,10 @@ var Song = function()
       console.log("playing..",offset)
       marabu.sequencer.follower.start(offset);
       mAudio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
-      mAudioTimer.reset();
+      mAudioTimer.reset(getPrevTime());
       mAudio.play();
     };
-    generateAudio(doneFun,opts,looped_song);
+    generateAudio(doneFun, opts, looped_song);
   }
 
   this.length = 0;
@@ -320,14 +336,14 @@ var Song = function()
 
   this.update = function()
   {
-    this.validate();
-    this.update_length();
+    self.validate();
+    self.update_length();
   }
 
   this.validate = function()
   {
     for(var i = 0; i < 16; ++i) {
-      var offset = (this.length+34) - mSong.songData[i].p.length;
+      var offset = (self.length+34) - mSong.songData[i].p.length;
       if(offset < 0){ continue; }
       // Fill
       for(var fill = 0; fill < offset; ++fill){
@@ -344,7 +360,7 @@ var Song = function()
         if(mSong.songData[i].p[p] > 0 && p > l){ l = p; }
       }
     }
-    this.length = l;
+    self.length = l;
   }
 
   //--------------------------------------------------------------------------
@@ -359,7 +375,7 @@ var Song = function()
     mAudioTimer.setAudioElement(mAudio);
     mAudio.addEventListener("canplay", function (){ 
       console.log("canplay")
-      this.play(); 
+      self.play(); 
     }, true);
 
     mSong = new Track();
@@ -371,6 +387,9 @@ var Song = function()
 
 var CAudioTimer = function ()
 {
+  var self = this
+  this.offset = 0.0
+
   var mAudioElement = null;
   var mStartT = 0;
   var mErrHist = [0, 0, 0, 0, 0, 0];
@@ -410,13 +429,15 @@ var CAudioTimer = function ()
     comp /= mErrHist.length;
     mErrHist[mErrHistPos] = err;
     mErrHistPos = (mErrHistPos + 1) % mErrHist.length;
-
-    var t = currentTime + comp
+    
+    //add playback offset 
+    var t = currentTime + comp + self.offset 
     return t;
   };
 
-  this.reset = function ()
+  this.reset = function (offset = 0)
   {
+    self.offset = offset
     mStartT = (new Date()).getTime() * 0.001;
     for (var i = 0; i < mErrHist.length; i++){
       mErrHist[i] = 0;
